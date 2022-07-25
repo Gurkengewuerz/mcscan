@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./data/mongo:/data/db
+
+  app:
+    image: gurken2108/mcscan
+    restart: unless-stopped
+    environment:
+      MONGO_URI: mongodb://root:password@localhost:27017
+      MONGO_DB: minecraft
+      MINECRAFT_PORT: 25565
+      SCAN_LIMIT: 100000

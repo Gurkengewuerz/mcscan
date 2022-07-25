@@ -1,0 +1,5 @@
+data/
+.idea/
+docker-build.sh
+docker-compose.yml
+*.exe
