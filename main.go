@@ -26,6 +26,7 @@ type config struct {
 	MinecraftPort   int    `env:"MINECRAFT_PORT" envDefault:"25565"`
 	ScanExcludeFile string `env:"SCAN_EXCLUDE_FILE" envDefault:"./exclude.conf"`
 	ScanLimit       int    `env:"SCAN_LIMIT" envDefault:"100000"`
+	TestRange       string `env:"TEST"`
 }
 
 func pingMC(serverIP string, port int) {
@@ -33,6 +34,7 @@ func pingMC(serverIP string, port int) {
 	minequery.NewPinger(minequery.WithTimeout(10 * time.Second))
 	res, err := minequery.Ping17(serverIP, port)
 	if err != nil {
+		log.Printf("Failed to query %s:%d", serverIP, port)
 		return
 	}
 
@@ -53,6 +55,7 @@ func pingMC(serverIP string, port int) {
 		{"samplePlayers", samplePlayers},
 	})
 	if err != nil {
+		log.Printf("Failed to insert new server %s:%d", serverIP, port)
 		return
 	}
 	log.Printf("Inserted new Server %s with ID %d\r\n", serverIP, mongoRes.InsertedID)
@@ -106,11 +109,15 @@ func main() {
 	// --------------------------------------------------
 
 	var ipRanges []string
-	for a := 0; a < 255; a++ {
-		for b := 0; b < 255; b++ {
-			possibleIPRange := fmt.Sprintf("%d.%d.0.0/16", a, b)
-			ipRanges = append(ipRanges, possibleIPRange)
+	if strings.TrimSpace(cfg.TestRange) == "" {
+		for a := 0; a < 255; a++ {
+			for b := 0; b < 255; b++ {
+				possibleIPRange := fmt.Sprintf("%d.%d.0.0/16", a, b)
+				ipRanges = append(ipRanges, possibleIPRange)
+			}
 		}
+	} else {
+		ipRanges = append(ipRanges, cfg.TestRange)
 	}
 
 	// --------------------------------------------------
