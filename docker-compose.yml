@@ -17,7 +17,7 @@ services:
     image: gurken2108/mcscan
     restart: unless-stopped
     environment:
-      MONGO_URI: mongodb://root:password@localhost:27017
+      MONGO_URI: mongodb://root:password@mongo:27017
       MONGO_DB: minecraft
       MINECRAFT_PORT: 25565
       SCAN_LIMIT: 100000
