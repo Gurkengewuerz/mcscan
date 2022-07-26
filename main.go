@@ -119,6 +119,7 @@ func main() {
 	} else {
 		ipRanges = append(ipRanges, cfg.TestRange)
 	}
+	ipRangesSize := len(ipRanges)
 
 	// --------------------------------------------------
 
@@ -132,7 +133,10 @@ func main() {
 			ctx, cancel = context.WithTimeout(context.Background(), 1*time.Hour)
 			defer cancel()
 			scanPort := strconv.FormatInt(int64(cfg.MinecraftPort), 10)
-			log.Printf("Started scanning range %s on Port %s", selectedIPRange, scanPort)
+			remaining := ipRangesSize - len(ipRanges)
+			done := ipRangesSize - remaining
+			percentage := float32(done) / float32(ipRangesSize) * 100.0
+			log.Printf("Started scanning range %s on Port %s (%d/%d %.2f%%)", selectedIPRange, scanPort, done, ipRangesSize, percentage)
 			scanner, err := masscan.NewScanner(
 				masscan.SetParamTargets(selectedIPRange),
 				masscan.SetParamPorts(scanPort),
