@@ -1,0 +1,27 @@
+[
+  {
+    '$sort': {
+      'createdAt': -1
+    }
+  }, {
+    '$project': {
+      'ip': 1, 
+      'version': 1, 
+      'motd': 1, 
+      'samplePlayers': 1, 
+      'isPlayerOnline': {
+        '$gte': [
+          '$onlinePlayers', 1
+        ]
+      }
+    }
+  }, {
+    '$match': {
+      'isPlayerOnline': true
+    }
+  }, {
+    '$match': {
+      'version': '1.19'
+    }
+  }
+]

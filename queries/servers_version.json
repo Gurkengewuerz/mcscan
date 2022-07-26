@@ -1,0 +1,11 @@
+[
+  {
+    '$sort': {
+      'createdAt': -1
+    }
+  }, {
+    '$match': {
+      'version': '1.19'
+    }
+  }
+]
